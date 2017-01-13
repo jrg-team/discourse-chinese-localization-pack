@@ -228,3 +228,44 @@ class OmniAuth::Strategies::Weibo < OmniAuth::Strategies::OAuth2
   end
 end
 
+class OmniAuth::Strategies::Jirengu < OmniAuth::Strategies::OAuth2
+  option :client_options, {
+    :site => 'http://user.jirengu.com',
+    :authorize_url => '/oauth/authorize',
+    :token_url => '/oauth/token'
+  }
+
+  uid do
+    raw_info['uid'].to_s
+  end
+
+  info do
+    {
+      'name' => raw_info['name'],
+      'image' => raw_info['avatar'],
+      'email' => raw_info['email'],
+    }
+  end
+
+  extra do
+    {
+      :raw_info => raw_info
+    }
+  end
+
+  def raw_info
+    access_token.options[:mode] = :query
+    @raw_info ||= access_token.get("/api/v1/me.json").parsed
+  end
+
+
+  def authorize_params
+    super.tap do |params|
+      %w[scope client_options].each do |v|
+        if request.params[v]
+          params[v.to_sym] = request.params[v]
+        end
+      end
+    end
+  end
+end
