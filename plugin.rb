@@ -15,7 +15,8 @@ PROVIDERS = [
   ['Weibo', 920, 800, 'rgb(230, 22, 45)', '\f18a'],
   ['QQ', 760, 500, '#51b7ec', '\f1d6'],
   ['Douban', 380, 460, 'rgb(42, 172, 94)', '豆'],
-  ['Renren', 950, 500, 'rgb(0, 94, 172)', '\f18b']
+  ['Renren', 950, 500, 'rgb(0, 94, 172)', '\f18b'],
+  ['Jirengu', 950, 500, '#1296DB', 'H'],
 ].freeze
 PLUGIN_PREFIX = 'zh_l10n_'.freeze
 SITE_SETTING_NAME = 'zh_l10n_enabled'.freeze
@@ -65,7 +66,7 @@ after_initialize do
 
       # only catch when a oauth login and a username is random
       if hash[:auth_provider]
-        match = hash[:username].match(/^\d+$/i)
+        match = (hash[:username]||'').match(/^\d+$/i)
 
         if SiteSetting.zh_l10n_disable_random_username_sugeestion && match
           hash[:username] = nil
