@@ -257,7 +257,10 @@ class OmniAuth::Strategies::Jirengu < OmniAuth::Strategies::OAuth2
     access_token.options[:mode] = :query
     @raw_info ||= access_token.get("/api/v1/me.json").parsed
   end
-
+  
+  def callback_url
+    options[:callback_url] || full_host + script_name + callback_path
+  end
 
   def authorize_params
     super.tap do |params|
